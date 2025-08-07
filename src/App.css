@@ -1,0 +1,88 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Add styles for resize handles */
+.resize-handle:hover {
+  background-color: rgba(0, 123, 255, 0.1) !important;
+}
+
+.resize-handle.column-resize:hover {
+  background-color: rgba(0, 123, 255, 0.2) !important;
+}
+
+.resize-handle.row-resize:hover {
+  background-color: rgba(0, 123, 255, 0.2) !important;
+}
+
+.resize-handle.table-resize:hover {
+  background-color: #0056b3 !important;
+  transform: scale(1.1);
+}
+
+.resize-handle.chart-resize:hover {
+  background-color: #0056b3 !important;
+  transform: scale(1.1);
+}
+
+/* Add transition for smooth resize handle interactions */
+.resize-handle {
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+/* Ensure table cells don't interfere with resize handles */
+.cell-input {
+  pointer-events: auto;
+}
+
+/* Add visual feedback during resizing */
+.table-resizing {
+  user-select: none;
+}
+
+.table-resizing * {
+  pointer-events: none;
+}
+
+.table-resizing .resize-handle {
+  pointer-events: auto;
+}
