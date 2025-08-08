@@ -213,108 +213,56 @@ export function TableComponent({
   return (
     <div
       ref={tableRef}
-      className={isResizing ? "table-resizing" : ""}
+      className={`absolute border-2 border-gray-700 bg-white rounded overflow-hidden shadow-lg ${
+        isResizing ? "table-resizing" : ""
+      } ${isDragging ? "cursor-grabbing" : isResizing ? "cursor-default" : "cursor-grab"}`}
       style={{
-        position: "absolute",
         left: tablePosition.x,
         top: tablePosition.y,
-        border: "2px solid #333",
-        backgroundColor: "white",
-        borderRadius: "4px",
-        overflow: "hidden",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
         width: tableWidth,
         height: tableHeight,
-        cursor: isDragging ? "grabbing" : isResizing ? "default" : "grab",
       }}
       onMouseDown={handleTableDragStart}
     >
       {Array.from({ length: columns - 1 }, (_, col) => (
         <div
           key={`col-resize-${col}`}
-          className="resize-handle column-resize"
+          className="resize-handle column-resize absolute top-0 w-1 h-full bg-transparent cursor-col-resize z-10"
           style={{
-            position: "absolute",
-            top: 0,
             left:
               columnWidths
                 .slice(0, col + 1)
                 .reduce((sum, width) => sum + width, 0) - 2,
-            width: "4px",
-            height: "100%",
-            backgroundColor: "transparent",
-            cursor: "col-resize",
-            zIndex: 10,
           }}
           onMouseDown={(e) => handleColumnResizeStart(e, col + 1)}
         >
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "2px",
-              height: "20px",
-              backgroundColor: "#007bff",
-              borderRadius: "1px",
-            }}
-          />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0.5 h-5 bg-blue-500 rounded" />
         </div>
       ))}
 
       {Array.from({ length: rows - 1 }, (_, row) => (
         <div
           key={`row-resize-${row}`}
-          className="resize-handle row-resize"
+          className="resize-handle row-resize absolute left-0 w-full h-1 bg-transparent cursor-row-resize z-10"
           style={{
-            position: "absolute",
             top:
               rowHeights
                 .slice(0, row + 1)
                 .reduce((sum, height) => sum + height, 0) - 2,
-            left: 0,
-            width: "100%",
-            height: "4px",
-            backgroundColor: "transparent",
-            cursor: "row-resize",
-            zIndex: 10,
           }}
           onMouseDown={(e) => handleRowResizeStart(e, row + 1)}
         >
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "20px",
-              height: "2px",
-              backgroundColor: "#007bff",
-              borderRadius: "1px",
-            }}
-          />
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-5 h-0.5 bg-blue-500 rounded" />
         </div>
       ))}
 
       <div
-        className="resize-handle table-resize"
-        style={{
-          position: "absolute",
-          bottom: "-6px",
-          right: "-6px",
-          width: "12px",
-          height: "12px",
-          backgroundColor: "#007bff",
-          borderRadius: "2px",
-          cursor: "nw-resize",
-          zIndex: 10,
-        }}
+        className="resize-handle table-resize absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-blue-500 rounded cursor-nw-resize z-10"
         onMouseDown={handleTableResizeStart}
       />
 
       {Array.from({ length: rows }, (_, row) => (
-        <div key={row} style={{ display: "flex" }}>
+        <div key={row} className="flex">
           {Array.from({ length: columns }, (_, col) => {
             const cellKey = `${row}-${col}`;
             const isEditing = editingCell === cellKey;
@@ -323,49 +271,35 @@ export function TableComponent({
             return (
               <div
                 key={col}
+                className={`border border-gray-300 flex items-center px-2 ${
+                  isHeader ? "bg-gray-50" : "bg-white"
+                } ${row === 0 ? "border-t-0" : ""} ${col === 0 ? "border-l-0" : ""}`}
                 style={{
                   width: columnWidths[col],
                   height: rowHeights[row],
-                  border: "1px solid #ddd",
-                  borderTop: row === 0 ? "none" : "1px solid #ddd",
-                  borderLeft: col === 0 ? "none" : "1px solid #ddd",
-                  backgroundColor: isHeader ? "#f8f9fa" : "white",
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "0 8px",
                 }}
                 onClick={() => handleCellClick(row, col)}
               >
                 {isEditing ? (
                   <input
                     type="text"
-                    className="cell-input"
+                    className="cell-input w-full border-none outline-none bg-transparent text-sm"
+                    style={{
+                      fontWeight: isHeader ? "bold" : "normal",
+                    }}
                     value={cellData[cellKey] || ""}
                     onChange={(e) => handleCellChange(row, col, e.target.value)}
                     onBlur={handleCellBlur}
                     onKeyDown={(e) => handleKeyDown(e, row, col)}
-                    style={{
-                      width: "100%",
-                      border: "none",
-                      outline: "none",
-                      backgroundColor: "transparent",
-                      fontSize: "14px",
-                      fontWeight: isHeader ? "bold" : "normal",
-                    }}
                     autoFocus
                   />
                 ) : (
                   <span
+                    className={`text-sm cursor-text w-full overflow-hidden text-ellipsis whitespace-nowrap ${
+                      cellData[cellKey] ? "text-gray-800" : "text-gray-500"
+                    }`}
                     style={{
-                      fontSize: "14px",
                       fontWeight: isHeader ? "bold" : "normal",
-                      color: cellData[cellKey] ? "#333" : "#999",
-                      cursor: "text",
-                      width: "100%",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
                     }}
                   >
                     {cellData[cellKey] ||

@@ -43,7 +43,7 @@ export default function App() {
   );
 
   return (
-    <div style={{ position: "fixed", inset: 0 }}>
+    <div className="fixed inset-0">
       <Tldraw />
       {tables.map((table) => (
         <TableComponent

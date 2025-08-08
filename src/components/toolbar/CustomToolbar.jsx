@@ -1,54 +1,26 @@
+import { Button, Group } from '@mantine/core';
+
 export function CustomToolbar({ onInsertTable, onInsertChart }) {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "1px",
-        left: "300px",
-        zIndex: 100,
-        backgroundColor: "white",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        padding: "2px",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        display: "flex",
-        gap: "4px",
-      }}
-    >
-      <button
-        onClick={onInsertTable}
-        style={{
-          padding: "8px 12px",
-          border: "none",
-          borderRadius: "4px",
-          backgroundColor: "#007bff",
-          color: "white",
-          cursor: "pointer",
-          fontSize: "14px",
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-        }}
-      >
-        📊 Insert Table
-      </button>
-      <button
-        onClick={onInsertChart}
-        style={{
-          padding: "8px 12px",
-          border: "none",
-          borderRadius: "4px",
-          backgroundColor: "#28a745",
-          color: "white",
-          cursor: "pointer",
-          fontSize: "14px",
-          display: "flex",
-          alignItems: "center",
-          gap: "6px",
-        }}
-      >
-        📈 Insert Chart
-      </button>
+    <div className="absolute top-1 left-[300px] z-[100] bg-white border border-gray-300 rounded-lg p-1 shadow-lg flex gap-1">
+      <Group gap="xs">
+        <Button
+          onClick={onInsertTable}
+          color="blue"
+          size="sm"
+          leftSection="📊"
+        >
+          Insert Table
+        </Button>
+        <Button
+          onClick={onInsertChart}
+          color="green"
+          size="sm"
+          leftSection="📈"
+        >
+          Insert Chart
+        </Button>
+      </Group>
     </div>
   );
 }

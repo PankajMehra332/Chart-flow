@@ -322,34 +322,19 @@ export function ChartComponent({
   return (
     <div
       ref={chartRef}
+      className={`absolute border-2 border-gray-700 bg-white rounded-lg overflow-hidden shadow-lg ${
+        isDragging ? "cursor-grabbing" : "cursor-grab"
+      }`}
       style={{
-        position: "absolute",
         left: position.x,
         top: position.y,
-        border: "2px solid #333",
-        backgroundColor: "white",
-        borderRadius: "8px",
-        overflow: "hidden",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
         width: size.width,
         height: size.height,
-        cursor: isDragging ? "grabbing" : "grab",
       }}
       onMouseDown={handleDragStart}
     >
       <div
-        className="resize-handle chart-resize"
-        style={{
-          position: "absolute",
-          bottom: "-6px",
-          right: "-6px",
-          width: "12px",
-          height: "12px",
-          backgroundColor: "#007bff",
-          borderRadius: "2px",
-          cursor: "nw-resize",
-          zIndex: 10,
-        }}
+        className="resize-handle chart-resize absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-blue-500 rounded cursor-nw-resize z-10"
         onMouseDown={handleResizeStart}
       />
       {renderChart()}
