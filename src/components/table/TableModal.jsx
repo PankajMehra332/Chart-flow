@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Modal, TextInput, NumberInput, Button, Stack, Title } from '@mantine/core';
+import { Modal, NumberInput, Button, Stack } from "@mantine/core";
 
-export function TableModal({ isOpen, onClose, onInsert }) {
+export function TableModal({ isOpen, onClose, onConfirm }) {
   const [rows, setRows] = useState(3);
   const [columns, setColumns] = useState(3);
 
   const handleInsert = () => {
-    onInsert({ rows, columns });
+    onConfirm({ rows, columns });
     onClose();
   };
 
@@ -21,7 +21,7 @@ export function TableModal({ isOpen, onClose, onInsert }) {
           max={10}
           required
         />
-        
+
         <NumberInput
           label="Columns"
           value={columns}
@@ -35,9 +35,7 @@ export function TableModal({ isOpen, onClose, onInsert }) {
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button onClick={handleInsert}>
-            Insert Table
-          </Button>
+          <Button onClick={handleInsert}>Insert Table</Button>
         </div>
       </Stack>
     </Modal>

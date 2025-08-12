@@ -6,7 +6,7 @@ import App from './App.jsx'
 import './index.css'
 
 const theme = createTheme({
-  /** Put your mantine theme override here */
+
 });
 
 ReactDOM.createRoot(document.getElementById('root')).render(

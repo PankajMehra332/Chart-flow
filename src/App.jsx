@@ -9,96 +9,109 @@ import {
 import "tldraw/tldraw.css";
 import { TableShapeUtil } from "./shapes/TableShape";
 import { ChartShapeUtil } from "./shapes/ChartShape";
+import { TableModal } from "./components/table/TableModal";
+import { ChartModal } from "./components/chart/ChartModal";
+import { useState } from "react";
 
-
-const uiOverrides = {
-  tools(editor, tools) {
-    tools["table-tool"] = {
-      id: "table-tool",
-      icon: "custom-icon",
-      label: "Table",
-      kbd: "t",
-      onSelect: () => handleAddTable(editor),
-    };
-    tools["chart-tool"] = {
-      id: "chart-tool",
-      icon: "custom-icon",
-      label: "Chart",
-      kbd: "c",
-      onSelect: () => handleAddChart(editor),
-    };
-    return tools;
-  },
-};
+export default function App() {
+  const [isTableModalOpen, setIsTableModalOpen] = useState(false);
+  const [isChartModalOpen, setIsChartModalOpen] = useState(false);
+  const [editorRef, setEditorRef] = useState(null);
 
   const handleAddTable = (editor) => {
-    console.log(editor, 'editor');
-    const rows = parseInt(prompt("Number of rows?", "3"), 10) || 3;
-    const columns = parseInt(prompt("Number of columns?", "3"), 10) || 3;
-    editor.createShape({
-      id: `shape:table_${Date.now()}`,
-      type: "table",
-      x: 100,
-      y: 100,
-      props: {
-        rows,
-        columns,
-        cellWidth: 150,
-        cellHeight: 50,
-      },
-    });
+    setEditorRef(editor);
+    setIsTableModalOpen(true);
+  };
+
+  const handleTableConfirm = ({ rows, columns }) => {
+    if (editorRef) {
+      editorRef.createShape({
+        id: `shape:table_${Date.now()}`,
+        type: "table",
+        x: 100,
+        y: 100,
+        props: {
+          rows,
+          columns,
+          w: columns * 150,
+          h: rows * 50,
+        },
+      });
+    }
   };
 
   const handleAddChart = (editor) => {
-    console.log(editor, 'editor');
-    const chartType = prompt("Chart type? (bar/line/pie)", "bar") || "bar";
-    editor.createShape({
-      id: `shape:chart_${Date.now()}`,
-      type: "chart",
-      x: 500,
-      y: 200,
-      props: {
-        type: chartType,
-        w: 400,
-        h: 300,
-        data: [
-          { label: "A", value: 10 },
-          { label: "B", value: 20 },
-          { label: "C", value: 15 },
-        ],
-        title: "Sample Chart",
-      },
-    });
+    setEditorRef(editor);
+    setIsChartModalOpen(true);
   };
 
-const components = {
-  Toolbar: (props) => {
-    const tools = useTools();
-    const isTableSelected = useIsToolSelected(tools["table-tool"]);
-    const isChartSelected = useIsToolSelected(tools["chart-tool"]);
-    return (
-      <DefaultToolbar {...props}>
-        <TldrawUiMenuItem
-          {...tools["table-tool"]}
-          isSelected={isTableSelected}
-        />
-        <TldrawUiMenuItem
-          {...tools["chart-tool"]}
-          isSelected={isChartSelected}
-        />
-        <DefaultToolbarContent />
-      </DefaultToolbar>
-    );
-  },
-};
+  const handleChartConfirm = ({ type, title, data }) => {
+    console.log(type, title, data, "checkthis");
+    if (editorRef) {
+      editorRef.createShape({
+        id: `shape:chart_${Date.now()}`,
+        type: "chart",
+        x: 500,
+        y: 200,
+        props: {
+          type: type,
+          w: 400,
+          h: 300,
+          data,
+          title,
+        },
+      });
+    }
+  };
 
-const customAssetUrls = {
-  icons: {
-    "custom-icon": "/vite.svg",
-  },
-};
+  const uiOverrides = {
+    tools(editor, tools) {
+      tools["table-tool"] = {
+        id: "table-tool",
+        icon: "table-icon",
+        label: "Table",
+        kbd: "t",
+        onSelect: () => handleAddTable(editor),
+      };
+      tools["chart-tool"] = {
+        id: "chart-tool",
+        icon: "chart-icon",
+        label: "Chart",
+        kbd: "c",
+        onSelect: () => handleAddChart(editor),
+      };
+      return tools;
+    },
+  };
 
-export default function App() {
+  const components = {
+    Toolbar: (props) => {
+      const tools = useTools();
+      const isTableSelected = useIsToolSelected(tools["table-tool"]);
+      const isChartSelected = useIsToolSelected(tools["chart-tool"]);
+      return (
+        <DefaultToolbar {...props}>
+          <TldrawUiMenuItem
+            {...tools["table-tool"]}
+            isSelected={isTableSelected}
+          />
+          <TldrawUiMenuItem
+            {...tools["chart-tool"]}
+            isSelected={isChartSelected}
+          />
+          <DefaultToolbarContent />
+        </DefaultToolbar>
+      );
+    },
+  };
+
+  const customAssetUrls = {
+    icons: {
+      "chart-icon": "/chart.svg",
+      "table-icon": "/table.svg",
+    },
+  };
+
   return (
     <div className="fixed inset-0">
       <Tldraw
@@ -106,6 +119,18 @@ export default function App() {
         overrides={uiOverrides}
         components={components}
         assetUrls={customAssetUrls}
+      />
+
+      <TableModal
+        isOpen={isTableModalOpen}
+        onClose={() => setIsTableModalOpen(false)}
+        onConfirm={handleTableConfirm}
+      />
+
+      <ChartModal
+        isOpen={isChartModalOpen}
+        onClose={() => setIsChartModalOpen(false)}
+        onConfirm={handleChartConfirm}
       />
     </div>
   );

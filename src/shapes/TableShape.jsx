@@ -1,46 +1,50 @@
-import { HTMLContainer, Rectangle2d, ShapeUtil, T, resizeBox } from "tldraw";
-import "tldraw/tldraw.css";
+import { HTMLContainer, Rectangle2d, ShapeUtil, T } from "tldraw";
 import { TableComponent } from "../components/table/TableComponent";
 
 export class TableShapeUtil extends ShapeUtil {
   static type = "table";
+
   static props = {
     rows: T.number,
     columns: T.number,
-    cellWidth: T.number,
-    cellHeight: T.number,
+    w: T.number,
+    h: T.number,
   };
 
   getDefaultProps() {
-    return { rows: 3, columns: 3, cellWidth: 150, cellHeight: 50 };
+    return {
+      rows: 3,
+      columns: 3,
+      w: 450,
+      h: 150,
+    };
   }
 
   canEdit() {
-    return false;
+    return true;
   }
+
   canResize() {
     return true;
   }
+
   isAspectRatioLocked() {
     return false;
   }
 
   getGeometry(shape) {
     return new Rectangle2d({
-      width: shape.props.columns * shape.props.cellWidth,
-      height: shape.props.rows * shape.props.cellHeight,
+      width: shape.props.w,
+      height: shape.props.h,
       isFilled: true,
     });
   }
 
   onResize(shape, info) {
-    const resized = resizeBox(shape, info);
     return {
-      ...shape,
       props: {
-        ...shape.props,
-        cellWidth: resized.props.width / shape.props.columns,
-        cellHeight: resized.props.height / shape.props.rows,
+        w: Math.max(100, info.scaleX * shape.props.w),
+        h: Math.max(60, info.scaleY * shape.props.h),
       },
     };
   }
@@ -48,15 +52,17 @@ export class TableShapeUtil extends ShapeUtil {
   component(shape) {
     return (
       <HTMLContainer
-        style={{ backgroundColor: "#fff", border: "1px solid #ccc", pointerEvents: "all" }}
+        style={{
+          width: shape.props.w,
+          height: shape.props.h,
+          pointerEvents: "all",
+        }}
       >
         <TableComponent
           rows={shape.props.rows}
           columns={shape.props.columns}
-          x={shape.x}
-          y={shape.y}
-          cellWidth={shape.props.cellWidth}
-          cellHeight={shape.props.cellHeight}
+          width={shape.props.w}
+          height={shape.props.h}
         />
       </HTMLContainer>
     );
@@ -65,8 +71,12 @@ export class TableShapeUtil extends ShapeUtil {
   indicator(shape) {
     return (
       <rect
-        width={shape.props.columns * shape.props.cellWidth}
-        height={shape.props.rows * shape.props.cellHeight}
+        width={shape.props.w}
+        height={shape.props.h}
+        fill="transparent"
+        stroke="var(--color-selected)"
+        strokeWidth="2"
+        strokeDasharray="5,5"
       />
     );
   }

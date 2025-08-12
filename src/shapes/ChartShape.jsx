@@ -35,6 +35,15 @@ export class ChartShapeUtil extends ShapeUtil {
     return true;
   }
 
+  onResize(shape, info) {
+    return {
+      props: {
+        w: Math.max(200, info.scaleX * shape.props.w),
+        h: Math.max(150, info.scaleY * shape.props.h),
+      },
+    };
+  }
+
   getGeometry(shape) {
     return new Rectangle2d({
       width: shape.props.w,
@@ -45,18 +54,34 @@ export class ChartShapeUtil extends ShapeUtil {
 
   component(shape) {
     return (
-      <HTMLContainer style={{ background: "#fff", border: "1px solid #ccc" }}>
+      <HTMLContainer
+        style={{
+          width: shape.props.w,
+          height: shape.props.h,
+          pointerEvents: "all",
+        }}
+      >
         <ChartComponent
           type={shape.props.type}
           data={shape.props.data}
           title={shape.props.title}
+          width={shape.props.w}
+          height={shape.props.h}
         />
       </HTMLContainer>
     );
   }
 
   indicator(shape) {
-    console.log(shape, "shape");
-    return <rect width={shape.props.w} height={shape.props.h} />;
+    return (
+      <rect
+        width={shape.props.w}
+        height={shape.props.h}
+        fill="transparent"
+        stroke="var(--color-selected)"
+        strokeWidth="2"
+        strokeDasharray="5,5"
+      />
+    );
   }
 }
