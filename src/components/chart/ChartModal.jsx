@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Modal, TextInput, Select, Button, Stack, Table, ActionIcon, Group } from '@mantine/core';
 import { IconTrash, IconPlus } from '@tabler/icons-react';
 
-export function ChartModal({ isOpen, onClose, onInsert }) {
+export function ChartModal({ isOpen, onClose, onConfirm  }) {
   const [chartType, setChartType] = useState("bar");
   const [chartData, setChartData] = useState([
     { label: "Category 1", value: 10 },
@@ -13,7 +13,7 @@ export function ChartModal({ isOpen, onClose, onInsert }) {
   const [title, setTitle] = useState("Chart Title");
 
   const handleInsert = () => {
-    onInsert({
+    onConfirm({
       type: chartType,
       data: chartData,
       title,
