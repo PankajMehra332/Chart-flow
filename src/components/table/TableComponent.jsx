@@ -215,13 +215,13 @@ export function TableComponent({
       ref={tableRef}
       className={`absolute border-2 border-gray-700 bg-white rounded overflow-hidden shadow-lg ${
         isResizing ? "table-resizing" : ""
-      } ${isDragging ? "cursor-grabbing" : isResizing ? "cursor-default" : "cursor-grab"}`}
-      style={{
-        left: tablePosition.x,
-        top: tablePosition.y,
-        width: tableWidth,
-        height: tableHeight,
-      }}
+      } ${
+        isDragging
+          ? "cursor-grabbing"
+          : isResizing
+          ? "cursor-default"
+          : "cursor-grab"
+      }`}
       onMouseDown={handleTableDragStart}
     >
       {Array.from({ length: columns - 1 }, (_, col) => (
@@ -273,7 +273,9 @@ export function TableComponent({
                 key={col}
                 className={`border border-gray-300 flex items-center px-2 ${
                   isHeader ? "bg-gray-50" : "bg-white"
-                } ${row === 0 ? "border-t-0" : ""} ${col === 0 ? "border-l-0" : ""}`}
+                } ${row === 0 ? "border-t-0" : ""} ${
+                  col === 0 ? "border-l-0" : ""
+                }`}
                 style={{
                   width: columnWidths[col],
                   height: rowHeights[row],
