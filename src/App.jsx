@@ -80,8 +80,28 @@ export default function App() {
         kbd: "c",
         onSelect: () => handleAddChart(editor),
       };
-      return tools;
+      return {
+        text: tools.text,
+        select: tools.select,
+        "table-tool": tools["table-tool"],
+        "chart-tool": tools["chart-tool"], 
+      };
     },
+    toolbar(editor, toolbar) {
+      return {
+        text: toolbar["text"],
+        select: toolbar["select"],
+        "table-tool": tools["table-tool"],
+        "chart-tool": tools["chart-tool"], 
+      };
+    },
+    actionsMenu: () => null,
+    helpMenu: () => null,
+    mainMenu: () => null,
+    pageMenu: () => null,
+    navigationPanel: () => null,
+    zoomMenu: () => null,
+    quickActions: () => null,
   };
 
   const components = {

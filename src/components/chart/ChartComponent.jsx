@@ -249,7 +249,6 @@ export function ChartComponent({
         width: width,
         height: height,
         background: "white",
-        border: "none",
         borderRadius: "4px",
         border:'1px solid gray'
       }}
