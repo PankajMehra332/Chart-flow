@@ -1,35 +1,33 @@
 import { useState } from "react";
+import { useEditor } from "tldraw";
 
-export function TableComponent({
-  rows,
-  columns,
-  cellWidth = 150,
-  cellHeight = 40,
-  width,
-  height,
-}) {
-  const [cellData, setCellData] = useState(() => {
-    const data = {};
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < columns; c++) {
-        data[`${r}-${c}`] = "";
-      }
-    }
-    return data;
-  });
+export function TableComponent({ shape }) {
+  const editor = useEditor();
+  const {
+    rows,
+    columns,
+    width = shape.props.w,
+    height = shape.props.h,
+    cellData,
+  } = shape.props;
 
   const [editingCell, setEditingCell] = useState(null);
   const actualCellWidth = width ? width / columns : cellWidth;
   const actualCellHeight = height ? height / rows : cellHeight;
 
   const handleCellChange = (row, col, value) => {
-    setCellData((prev) => ({
-      ...prev,
-      [`${row}-${col}`]: value,
-    }));
+    editor.updateShape({
+      id: shape.id,
+      type: "table",
+      props: {
+        ...shape.props,
+        cellData: { ...cellData, [`${row}-${col}`]: value },
+      },
+    });
   };
 
   const handleCellClick = (row, col, e) => {
+    e.preventDefault();
     e.stopPropagation();
     setEditingCell(`${row}-${col}`);
   };
@@ -65,7 +63,10 @@ export function TableComponent({
         width: width || columns * cellWidth,
         height: height || rows * cellHeight,
       }}
-      onPointerDown={(e) => e.stopPropagation()}
+      onPointerDown={(e) => {
+        e.stopPropagation();
+        e.preventDefault();
+      }}
     >
       {Array.from({ length: rows }, (_, row) => (
         <div key={row} className="flex">
